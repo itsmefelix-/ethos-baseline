@@ -1,0 +1,27 @@
+name: Baseline Client Daily (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      run_domain_hook:
+        required: false
+        type: boolean
+        default: true
+    secrets:
+      COGNOS_PUSH_TOKEN:
+        required: true
+
+jobs:
+  daily:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: itsmefelix-/ethos-baseline/actions/baseline-validate@v0.37.4
+        with:
+          run_domain_hook: ${{ inputs.run_domain_hook }}
+
+      - uses: itsmefelix-/ethos-baseline/actions/baseline-package-report@v0.37.4
+        with:
+          cognos_repo: itsmefelix-/cognos_ai
+          token:       ${{ secrets.COGNOS_PUSH_TOKEN }}
