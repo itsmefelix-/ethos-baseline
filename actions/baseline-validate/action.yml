@@ -1,8 +1,10 @@
 name: Baseline Validate
 description: Run baseline validators (placeholder)
+inputs: {}
+outputs: {}
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
-    - name: Baseline validate placeholder
+    - id: ok
       shell: bash
       run: echo "Baseline validate: OK (placeholder)"

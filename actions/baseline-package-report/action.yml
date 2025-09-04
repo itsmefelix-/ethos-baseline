@@ -1,8 +1,10 @@
 name: Baseline Package & Report
 description: Stage/manifest/zip/report (placeholder)
+inputs: {}
+outputs: {}
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
-    - name: Baseline package placeholder
+    - id: ok
       shell: bash
       run: echo "Baseline package: OK (placeholder)"
