@@ -1,4 +1,5 @@
 name: Baseline Client Daily (reusable)
+
 on:
   workflow_call:
     inputs:
@@ -16,12 +17,54 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Baseline validate (placeholder)
+      # Optional: run domain hook if present
+      - name: Domain hook (optional)
+        if: ${{ inputs.run_domain_hook }}
         shell: bash
         run: |
-          echo "Baseline validate: OK (placeholder)"
+          if [ -x Domain/scripts/run.sh ]; then
+            Domain/scripts/run.sh
+          else
+            echo "No Domain/scripts/run.sh — skipping"
+          fi
 
-      - name: Baseline package & report (placeholder)
+      # Stage & zip 'exports' (create empty zip if no exports dir)
+      - name: Stage & zip exports
+        id: stage
         shell: bash
         run: |
-          echo "Baseline package: OK (placeholder)"
+          set -e
+          slug="$(basename "$GITHUB_REPOSITORY")"
+          today="$(date -u +%F)"
+          mkdir -p artifacts
+          if [ -d exports ]; then
+            (cd exports && zip -qr "../artifacts/${slug}_daily_${today}.zip" .)
+          else
+            echo "No exports folder found; creating an empty zip"
+            cd artifacts; zip -qr "${slug}_daily_${today}.zip" /dev/null || true; cd -
+          fi
+          echo "slug=$slug"  >> "$GITHUB_OUTPUT"
+          echo "today=$today" >> "$GITHUB_OUTPUT"
+
+      # Push zip and status_export.json (if present) to Cognos
+      - name: Report to Cognos
+        env:
+          TOKEN: ${{ secrets.COGNOS_PUSH_TOKEN }}
+          SLUG:  ${{ steps.stage.outputs.slug }}
+          TODAY: ${{ steps.stage.outputs.today }}
+        shell: bash
+        run: |
+          set -e
+          git config user.email "client-ci@local"
+          git config user.name  "client-ci"
+          rm -rf cognos_ai
+          git clone "https://x-access-token:${TOKEN}@github.com/itsmefelix-/cognos_ai.git" cognos_ai
+          mkdir -p "cognos_ai/inbox" "cognos_ai/timeline/$SLUG"
+          cp -f "artifacts/${SLUG}_daily_${TODAY}.zip" "cognos_ai/inbox/" || true
+          if [ -f exports/status_export.json ]; then
+            cp -f exports/status_export.json "cognos_ai/timeline/$SLUG/status_export_${TODAY}.json"
+          fi
+          cd cognos_ai
+          git add inbox/*.zip "timeline/$SLUG/status_export_${TODAY}.json" 2>/dev/null || true
+          git commit -m "$SLUG: report $TODAY" || echo "No changes to commit"
+          git push
