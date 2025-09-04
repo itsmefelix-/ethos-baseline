@@ -1,0 +1,8 @@
+name: "Baseline Package Report"
+description: "Package results and report to Cognos"
+runs:
+  using: "composite"
+  steps:
+    - name: Package results
+      run: echo "TODO: add packaging command"
+      shell: bash
