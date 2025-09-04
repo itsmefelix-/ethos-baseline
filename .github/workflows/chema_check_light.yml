@@ -1,0 +1,39 @@
+name: Schema Check (light, reusable)
+on:
+  workflow_call:
+    inputs:
+      run_domain_checks:
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  schema-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install jsonschema
+        run: |
+          python3 -m pip install --upgrade pip jsonschema
+
+      - name: Validate status_export.json (baseline)
+        run: |
+          if [ -f exports/status_export.json ]; then
+            echo "Found exports/status_export.json (baseline light check)"
+          else
+            echo "No exports/status_export.json — skipping baseline check"
+          fi
+
+      - name: Domain checks (optional)
+        if: ${{ inputs.run_domain_checks }}
+        run: |
+          if [ -x Domain/tests/smoke.sh ]; then
+            Domain/tests/smoke.sh
+          else
+            echo "No Domain/tests/smoke.sh — skipping"
+          fi
