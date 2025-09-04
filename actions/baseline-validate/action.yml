@@ -1,8 +1,8 @@
-name: "Baseline Validate"
-description: "Run baseline validators"
+name: Baseline Validate
+description: Run baseline validators (placeholder)
 runs:
   using: "composite"
   steps:
-    - name: Validate status_export.json
+    - name: Baseline validate placeholder
       shell: bash
-      run: echo "TODO: add validator command"
+      run: echo "Baseline validate: OK (placeholder)"

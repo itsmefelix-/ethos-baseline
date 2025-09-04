@@ -1,8 +1,8 @@
-name: "Baseline Package Report"
-description: "Package results and report to Cognos"
+name: Baseline Package & Report
+description: Stage/manifest/zip/report (placeholder)
 runs:
   using: "composite"
   steps:
-    - name: Package results
-      run: echo "TODO: add packaging command"
+    - name: Baseline package placeholder
       shell: bash
+      run: echo "Baseline package: OK (placeholder)"
