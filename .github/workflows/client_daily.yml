@@ -1,5 +1,4 @@
 name: Baseline Client Daily (reusable)
-
 on:
   workflow_call:
     inputs:
@@ -19,8 +18,10 @@ jobs:
 
       - name: Baseline validate (placeholder)
         shell: bash
-        run: echo "Baseline validate: OK (placeholder)"
+        run: |
+          echo "Baseline validate: OK (placeholder)"
 
       - name: Baseline package & report (placeholder)
         shell: bash
-        run: echo "Baseline package: OK (placeholder)"
+        run: |
+          echo "Baseline package: OK (placeholder)"
