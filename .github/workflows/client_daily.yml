@@ -55,8 +55,6 @@ jobs:
         shell: bash
         run: |
           set -e
-          git config user.email "client-ci@local"
-          git config user.name  "client-ci"
           rm -rf cognos_ai
           git clone "https://x-access-token:${TOKEN}@github.com/itsmefelix-/cognos_ai.git" cognos_ai
           mkdir -p "cognos_ai/inbox" "cognos_ai/timeline/$SLUG"
@@ -65,6 +63,8 @@ jobs:
             cp -f exports/status_export.json "cognos_ai/timeline/$SLUG/status_export_${TODAY}.json"
           fi
           cd cognos_ai
+          git config user.email "client-ci@local"
+          git config user.name  "client-ci"
           git add inbox/*.zip "timeline/$SLUG/status_export_${TODAY}.json" 2>/dev/null || true
           git commit -m "$SLUG: report $TODAY" || echo "No changes to commit"
           git push
