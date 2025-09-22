@@ -1,9 +1,6 @@
 # Deprecated: Moved to Praxis
 
-The ethos-baseline history is now integrated into the Praxis monorepo under `shared/ethos-baseline/`.
-
-Active development continues at:
-
-https://github.com/itsmefelix-/praxis/tree/process/prd-task-scaffold/shared/ethos-baseline
+The history now lives in the Praxis repo under `shared/ethos-baseline/`.
+See: https://github.com/itsmefelix-/praxis
 
 This repository remains for archival purposes only.
