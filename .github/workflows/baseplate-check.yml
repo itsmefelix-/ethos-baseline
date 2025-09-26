@@ -1,0 +1,25 @@
+name: Baseplate Check
+
+on:
+  pull_request:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'BASEPLATE_VERSION'
+      - 'context/**'
+      - 'planning/**'
+      - 'docs/**'
+      - '.github/workflows/baseplate-check.yml'
+      - 'tools/validation/check_baseplate.py'
+      - 'baseplate_template/**'
+      - '**/BASEPLATE_VERSION'
+      - '.github/workflows/**'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run baseplate validator
+        run: |
+          python3 tools/validation/check_baseplate.py --strict --expected-version $(cat BASEPLATE_VERSION)
